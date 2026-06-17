@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { getStationById } from "@/data/stations";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FavoriteButton } from "@/components/ui/favorite-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatFrequency } from "@/types/station";
 
@@ -44,7 +45,10 @@ export function StationDetailPage() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-radio-brass/50 bg-radio-dial shadow-dial">
             <Radio className="h-8 w-8 text-radio-amber animate-pulse" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-radio-cream">{station.callSign}</h1>
+          <div className="flex items-center justify-center gap-3">
+            <h1 className="font-display text-2xl font-bold text-radio-cream">{station.callSign}</h1>
+            <FavoriteButton id={station.id} size="lg" />
+          </div>
           <p className="mt-2 frequency-display text-3xl">{formatFrequency(station.frequency)}</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <Badge variant="band">{station.band} 波段</Badge>

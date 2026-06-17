@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AppHeader } from "@/components/layout/AppHeader";
+import { FavoritesPage } from "@/pages/FavoritesPage";
 import { StationDetailPage } from "@/pages/StationDetailPage";
 import { StationListPage } from "@/pages/StationListPage";
 
@@ -14,6 +15,7 @@ export default function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<StationListPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/station/:id" element={<StationDetailPage />} />
           </Routes>
         </main>

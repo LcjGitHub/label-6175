@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FavoriteButton } from "@/components/ui/favorite-button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -77,12 +78,15 @@ export function StationTable({ data }: StationTableProps) {
           <SortButton column={column} label="呼号" />
         ),
         cell: ({ row }) => (
-          <Link
-            to={`/station/${row.original.id}`}
-            className="font-semibold text-radio-amber hover:underline"
-          >
-            {row.original.callSign}
-          </Link>
+          <div className="flex items-center gap-2">
+            <FavoriteButton id={row.original.id} size="sm" />
+            <Link
+              to={`/station/${row.original.id}`}
+              className="font-semibold text-radio-amber hover:underline"
+            >
+              {row.original.callSign}
+            </Link>
+          </div>
         ),
       },
       {
