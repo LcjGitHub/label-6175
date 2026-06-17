@@ -8,6 +8,7 @@ import { FavoriteButton } from "@/components/ui/favorite-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatFrequency } from "@/types/station";
 import { addHistory } from "@/lib/history";
+import { SameBandRecommendations } from "@/components/stations/SameBandRecommendations";
 
 /**
  * 台站详情页，展示 Mock 收听建议
@@ -96,6 +97,8 @@ export function StationDetailPage() {
           </p>
         </CardContent>
       </Card>
+
+      <SameBandRecommendations stationId={station.id} />
     </div>
   );
 }
