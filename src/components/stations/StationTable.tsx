@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FavoriteButton } from "@/components/ui/favorite-button";
+import { HighlightText } from "@/components/ui/highlight-text";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -121,7 +122,7 @@ export function StationTable({
               to={`/station/${row.original.id}`}
               className="font-semibold text-radio-amber hover:underline"
             >
-              {row.original.callSign}
+              <HighlightText text={row.original.callSign} keyword={searchQuery} />
             </Link>
           </div>
         ),
@@ -149,6 +150,9 @@ export function StationTable({
         header: ({ column }) => (
           <SortButton column={column} label="语言" />
         ),
+        cell: ({ row }) => (
+          <HighlightText text={row.original.language} keyword={searchQuery} />
+        ),
       },
       {
         accessorKey: "timeSlot",
@@ -156,7 +160,9 @@ export function StationTable({
           <SortButton column={column} label="时段" />
         ),
         cell: ({ row }) => (
-          <span className="text-muted-foreground text-xs">{row.original.timeSlot}</span>
+          <span className="text-muted-foreground text-xs">
+            <HighlightText text={row.original.timeSlot} keyword={searchQuery} />
+          </span>
         ),
       },
       {
@@ -173,7 +179,7 @@ export function StationTable({
         enableSorting: false,
       },
     ],
-    [canAdd]
+    [canAdd, searchQuery]
   );
 
   const table = useReactTable({
