@@ -40,7 +40,7 @@ export function getHighlightSegments(text: string, keyword: string): HighlightSe
     index = lowerText.indexOf(lowerKeyword, lastIndex);
   }
 
-  if (lastIndex < text.length) {
+  if (lastIndex < text.length || segments.length === 0) {
     segments.push({
       text: text.slice(lastIndex),
       isHighlight: false,

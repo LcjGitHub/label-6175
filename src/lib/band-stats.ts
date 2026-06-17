@@ -99,7 +99,9 @@ export interface LanguageOption {
  * 用于表格上方语言筛选下拉框，随台站数据动态更新
  */
 export function extractLanguageOptions(stationList: Station[] = stations): LanguageOption[] {
-  const langs = Array.from(new Set(stationList.map((s) => s.language))).sort();
+  const langs = Array.from(new Set(stationList.map((s) => s.language))).sort((a, b) =>
+    a.localeCompare(b, "zh-CN")
+  );
   return [
     { value: "all", label: "全部语言" },
     ...langs.map((l) => ({ value: l, label: l })),
