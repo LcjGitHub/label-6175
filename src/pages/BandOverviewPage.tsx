@@ -1,10 +1,15 @@
 import { useMemo } from "react";
+import { ArrowLeft, BarChart2, Radio, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { BarChart2, Radio, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { computeBandStats, getTotalStationCount, getUniqueLanguageCount } from "@/lib/band-stats";
 
+/**
+ * 频段统计概览页
+ * 以卡片形式展示各米波频段的台站总数与语言分布，点击卡片跳转至首页并自动筛选对应频段
+ */
 export function BandOverviewPage() {
   const bandStats = useMemo(() => computeBandStats(), []);
   const totalStations = useMemo(() => getTotalStationCount(), []);
@@ -13,6 +18,15 @@ export function BandOverviewPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-8">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-radio-amber">
+          <Link to="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            返回全部台站
+          </Link>
+        </Button>
+      </div>
+
       <Card className="radio-panel border-radio-brass/30 bg-radio-wood/30">
         <CardHeader>
           <div className="flex items-center gap-2">

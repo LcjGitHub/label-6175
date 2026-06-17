@@ -5,6 +5,9 @@ import { FavoritesPage } from "@/pages/FavoritesPage";
 import { StationDetailPage } from "@/pages/StationDetailPage";
 import { StationListPage } from "@/pages/StationListPage";
 
+/**
+ * 应用根组件，配置 React Router 路由
+ */
 export default function App() {
   return (
     <BrowserRouter>

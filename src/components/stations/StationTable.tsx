@@ -40,6 +40,9 @@ interface StationTableProps {
   initialBandFilter?: FrequencyBand | "all";
 }
 
+/**
+ * 台站列表 TanStack Table，支持频段筛选、模糊搜索与列排序
+ */
 export function StationTable({
   data,
   emptyText = "未找到匹配的台站，请调整筛选条件",

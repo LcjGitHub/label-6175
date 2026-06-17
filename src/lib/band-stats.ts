@@ -2,11 +2,17 @@ import { stations } from "@/data/stations";
 import { BAND_OPTIONS } from "@/types/station";
 import type { FrequencyBand, Station } from "@/types/station";
 
+/**
+ * 单语言计数项
+ */
 export interface LanguageCount {
   language: string;
   count: number;
 }
 
+/**
+ * 单频段统计数据
+ */
 export interface BandStat {
   band: FrequencyBand;
   label: string;
@@ -15,6 +21,9 @@ export interface BandStat {
   languages: LanguageCount[];
 }
 
+/**
+ * 按频段聚合台站统计数据，包含各频段总台站数与语言分布（按数量降序）
+ */
 export function computeBandStats(stationList: Station[] = stations): BandStat[] {
   const bandMap = new Map<FrequencyBand, BandStat>();
 
@@ -62,10 +71,16 @@ export function computeBandStats(stationList: Station[] = stations): BandStat[] 
   return result;
 }
 
+/**
+ * 获取总台站数
+ */
 export function getTotalStationCount(stationList: Station[] = stations): number {
   return stationList.length;
 }
 
+/**
+ * 获取不重复的语言种类数
+ */
 export function getUniqueLanguageCount(stationList: Station[] = stations): number {
   const langs = new Set(stationList.map((s) => s.language));
   return langs.size;

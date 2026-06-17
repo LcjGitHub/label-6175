@@ -1,11 +1,26 @@
 import { BarChart2, Radio, Star } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useFavoritesCount } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 
+/**
+ * 应用顶部导航栏，复古收音机风格
+ */
 export function AppHeader() {
   const count = useFavoritesCount();
+  const location = useLocation();
+  const isOverviewActive = location.pathname === "/频段概览";
+  const isFavoritesActive = location.pathname === "/收藏";
+
+  const navBtnBaseCls = (active: boolean) =>
+    cn(
+      "border-radio-brass/40 bg-radio-dial/30 transition-all",
+      active
+        ? "border-radio-amber/80 bg-radio-amber/20 shadow-[0_0_8px_rgba(255,179,71,0.3)]"
+        : "hover:bg-accent/20 hover:border-radio-brass/60"
+    );
+
   return (
     <header className="border-b border-radio-brass/30 bg-radio-wood/60 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
@@ -25,24 +40,25 @@ export function AppHeader() {
             asChild
             variant="outline"
             size="sm"
-            className={cn(
-              "border-radio-brass/40 bg-radio-dial/30 transition-all",
-              "hover:bg-accent/20 hover:border-radio-brass/60"
-            )}
+            className={navBtnBaseCls(isOverviewActive)}
           >
             <Link to="/频段概览">
-              <BarChart2 className="h-4 w-4 text-radio-amber" />
-              <span className="text-xs text-radio-cream">频段概览</span>
+              <BarChart2
+                className={cn(
+                  "h-4 w-4 transition-all",
+                  isOverviewActive ? "text-radio-amber drop-shadow-[0_0_3px_rgba(255,179,71,0.6)]" : "text-radio-amber"
+                )}
+              />
+              <span className={cn("text-xs", isOverviewActive ? "text-radio-amber font-semibold" : "text-radio-cream")}>
+                频段概览
+              </span>
             </Link>
           </Button>
           <Button
             asChild
             variant="outline"
             size="sm"
-            className={cn(
-              "border-radio-brass/40 bg-radio-dial/30 transition-all",
-              "hover:bg-accent/20 hover:border-radio-brass/60"
-            )}
+            className={navBtnBaseCls(isFavoritesActive)}
           >
             <Link to="/收藏">
               <Star
@@ -51,7 +67,9 @@ export function AppHeader() {
                   count > 0 ? "fill-current drop-shadow-[0_0_4px_rgba(255,179,71,0.5)]" : ""
                 )}
               />
-              <span className="text-xs text-radio-cream">收藏</span>
+              <span className={cn("text-xs", isFavoritesActive ? "text-radio-amber font-semibold" : "text-radio-cream")}>
+                收藏
+              </span>
               <span className="ml-1 inline-flex min-w-[20px] items-center justify-center rounded-full bg-radio-amber/20 px-1.5 py-0.5 text-xs font-semibold text-radio-amber">
                 {count}
               </span>

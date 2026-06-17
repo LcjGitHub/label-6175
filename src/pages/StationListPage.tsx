@@ -7,6 +7,9 @@ import { BAND_OPTIONS } from "@/types/station";
 import type { FrequencyBand } from "@/types/station";
 import { Signal } from "lucide-react";
 
+/**
+ * 台站列表首页
+ */
 export function StationListPage() {
   const [searchParams] = useSearchParams();
   const bandParam = searchParams.get("band");

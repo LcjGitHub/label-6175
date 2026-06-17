@@ -114,6 +114,7 @@ tmp/
 .turbo/
 .vercel/
 .netlify/
+tsconfig.tsbuildinfo
 
 # Archives (optional local bundles)
 *.zip
