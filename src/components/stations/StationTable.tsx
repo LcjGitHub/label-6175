@@ -4,7 +4,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown, ExternalLink, GitCompare, Search, X } from "lucide-react";
@@ -94,12 +93,28 @@ export function StationTable({
     return result;
   }, [data, bandFilter, languageFilter, searchQuery]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredData.length / PAGE_SIZE));
+  const sortedData = useMemo(() => {
+    if (sorting.length === 0) return filteredData;
+    const result = [...filteredData];
+    result.sort((a, b) => {
+      for (const sort of sorting) {
+        const aVal = (a as any)[sort.id];
+        const bVal = (b as any)[sort.id];
+        if (aVal === bVal) continue;
+        if (aVal < bVal) return sort.desc ? 1 : -1;
+        if (aVal > bVal) return sort.desc ? -1 : 1;
+      }
+      return 0;
+    });
+    return result;
+  }, [filteredData, sorting]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedData.length / PAGE_SIZE));
 
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * PAGE_SIZE;
-    return filteredData.slice(start, start + PAGE_SIZE);
-  }, [filteredData, currentPage]);
+    return sortedData.slice(start, start + PAGE_SIZE);
+  }, [sortedData, currentPage]);
 
   const selectedStations = useMemo(() => {
     return data.filter((s) => selectedIds.includes(s.id));
@@ -194,8 +209,8 @@ export function StationTable({
     state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    manualSorting: true,
   });
 
   const selectedBand = BAND_OPTIONS.find((b) => b.value === bandFilter);
@@ -313,7 +328,7 @@ export function StationTable({
 
       <div className="flex items-center justify-between px-1">
         <div className="text-sm text-muted-foreground">
-          共 <span className="text-radio-amber font-semibold">{filteredData.length}</span> 个台站
+          共 <span className="text-radio-amber font-semibold">{sortedData.length}</span> 个台站
           {selectedBand && selectedBand.range && (
             <span className="ml-2 hidden sm:inline">· {selectedBand.range}</span>
           )}
@@ -363,7 +378,7 @@ export function StationTable({
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        totalItems={filteredData.length}
+        totalItems={sortedData.length}
         pageSize={PAGE_SIZE}
         onPageChange={setCurrentPage}
         className="px-1"

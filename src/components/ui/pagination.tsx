@@ -46,13 +46,17 @@ export function Pagination({
     }
   };
 
-  const handleJump = (e: React.FormEvent) => {
-    e.preventDefault();
+  const doJump = () => {
     const page = parseInt(jumpValue, 10);
     if (!isNaN(page) && page >= 1 && page <= totalPages && page !== currentPage) {
       onPageChange(page);
     }
     setJumpValue("");
+  };
+
+  const handleJump = (e: React.FormEvent) => {
+    e.preventDefault();
+    doJump();
   };
 
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
@@ -61,8 +65,7 @@ export function Pagination({
   if (totalPages <= 1) {
     return (
       <div className={cn("flex items-center justify-between text-sm text-muted-foreground", className)}>
-        <span>共 {totalItems} 条</span>
-        <span>第 {currentPage} / {totalPages} 页</span>
+        <span>显示 1-{totalItems} 条，共 {totalItems} 条</span>
       </div>
     );
   }
@@ -85,14 +88,6 @@ export function Pagination({
           <ChevronLeft className="h-4 w-4" />
           上一页
         </Button>
-
-        <div className="flex items-center gap-1 text-sm">
-          <span className="text-muted-foreground">第</span>
-          <span className="text-radio-amber font-semibold min-w-[2ch] text-center">{currentPage}</span>
-          <span className="text-muted-foreground">/</span>
-          <span className="text-radio-amber font-semibold min-w-[2ch] text-center">{totalPages}</span>
-          <span className="text-muted-foreground">页</span>
-        </div>
 
         <Button
           variant="outline"
@@ -117,6 +112,15 @@ export function Pagination({
             className="w-16 h-8 text-center"
           />
           <span className="text-sm text-muted-foreground">页</span>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={doJump}
+            disabled={!jumpValue || parseInt(jumpValue, 10) < 1 || parseInt(jumpValue, 10) > totalPages}
+          >
+            跳转
+          </Button>
         </form>
       </div>
     </div>
