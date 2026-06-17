@@ -1,5 +1,6 @@
 import { useEffect, type ComponentType } from "react";
 import { ArrowLeft, Antenna, Clock, Globe, Radio, Zap } from "lucide-react";
+import { CopyButton } from "@/components/ui/copy-button";
 import { Link, useParams } from "react-router-dom";
 import { getStationById } from "@/data/stations";
 import { Badge } from "@/components/ui/badge";
@@ -80,11 +81,19 @@ export function StationDetailPage() {
 
       <Card className="radio-panel border-radio-brass/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-radio-amber animate-pulse" />
-            收听建议
-          </CardTitle>
-          <CardDescription>基于 Mock 数据的参考性收听提示（非实时传播预报）</CardDescription>
+          <div className="flex items-start justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <span className="inline-block h-2 w-2 rounded-full bg-radio-amber animate-pulse" />
+                收听建议
+              </CardTitle>
+              <CardDescription>基于 Mock 数据的参考性收听提示（非实时传播预报）</CardDescription>
+            </div>
+            <CopyButton
+              text={`呼号：${station.callSign}\n频率：${formatFrequency(station.frequency)}\n收听建议：\n${station.listeningAdvice}`}
+              size="sm"
+            />
+          </div>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border border-radio-brass/20 bg-radio-dial/30 p-5">
