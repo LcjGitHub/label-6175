@@ -6,7 +6,7 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, ExternalLink, GitCompare, Search, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ExternalLink, GitCompare, RotateCcw, Search, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -215,6 +215,23 @@ export function StationTable({
 
   const selectedBand = BAND_OPTIONS.find((b) => b.value === bandFilter);
 
+  const hasActiveFilters = useMemo(() => {
+    return (
+      bandFilter !== "all" ||
+      languageFilter !== "all" ||
+      searchQuery.trim() !== "" ||
+      sorting.length > 0
+    );
+  }, [bandFilter, languageFilter, searchQuery, sorting]);
+
+  const handleResetFilters = () => {
+    setBandFilter("all");
+    setLanguageFilter("all");
+    setSearchQuery("");
+    setSorting([]);
+    setCurrentPage(1);
+  };
+
   const handleCompare = () => {
     if (count > 0) {
       const ids = selectedIds.join(",");
@@ -246,6 +263,17 @@ export function StationTable({
                 ))}
               </SelectContent>
             </Select>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleResetFilters}
+              disabled={!hasActiveFilters}
+              className="gap-1"
+              title="重置所有筛选和排序"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">重置筛选</span>
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             <label htmlFor="language-filter" className="text-sm text-muted-foreground whitespace-nowrap">
