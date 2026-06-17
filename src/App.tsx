@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { BandOverviewPage } from "@/pages/BandOverviewPage";
 import { FavoritesPage } from "@/pages/FavoritesPage";
+import { StationComparePage } from "@/pages/StationComparePage";
 import { StationDetailPage } from "@/pages/StationDetailPage";
 import { StationListPage } from "@/pages/StationListPage";
 
@@ -18,6 +19,7 @@ export default function App() {
             <Route path="/" element={<StationListPage />} />
             <Route path="/频段概览" element={<BandOverviewPage />} />
             <Route path="/收藏" element={<FavoritesPage />} />
+            <Route path="/对比" element={<StationComparePage />} />
             <Route path="/station/:id" element={<StationDetailPage />} />
           </Routes>
         </main>

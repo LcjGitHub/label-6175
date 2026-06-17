@@ -8,9 +8,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Fuse from "fuse.js";
-import { ArrowDown, ArrowUp, ArrowUpDown, ExternalLink, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ExternalLink, GitCompare, Search, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FavoriteButton } from "@/components/ui/favorite-button";
@@ -34,6 +34,9 @@ import { formatFrequency } from "@/types/station";
 import type { FrequencyBand, Station } from "@/types/station";
 import { BAND_OPTIONS } from "@/types/station";
 import { extractLanguageOptions } from "@/lib/band-stats";
+import { useCompare, useCompareItem } from "@/hooks/useCompare";
+import { removeFromCompare } from "@/lib/compare";
+import { cn } from "@/lib/utils";
 
 interface StationTableProps {
   data: Station[];
@@ -54,6 +57,8 @@ export function StationTable({
   const [bandFilter, setBandFilter] = useState<FrequencyBand | "all">(initialBandFilter);
   const [languageFilter, setLanguageFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const { selectedIds, count, canAdd, clear } = useCompare();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setBandFilter(initialBandFilter);
@@ -89,8 +94,21 @@ export function StationTable({
     return result;
   }, [data, bandFilter, languageFilter, searchQuery, fuse]);
 
+  const selectedStations = useMemo(() => {
+    return data.filter((s) => selectedIds.includes(s.id));
+  }, [data, selectedIds]);
+
   const columns = useMemo<ColumnDef<Station>[]>(
     () => [
+      {
+        id: "select",
+        header: () => <span className="sr-only">选择</span>,
+        cell: ({ row }) => (
+          <CompareCheckbox id={row.original.id} canAdd={canAdd} />
+        ),
+        enableSorting: false,
+        size: 40,
+      },
       {
         accessorKey: "callSign",
         header: ({ column }) => (
@@ -155,7 +173,7 @@ export function StationTable({
         enableSorting: false,
       },
     ],
-    []
+    [canAdd]
   );
 
   const table = useReactTable({
@@ -170,10 +188,17 @@ export function StationTable({
 
   const selectedBand = BAND_OPTIONS.find((b) => b.value === bandFilter);
 
+  const handleCompare = () => {
+    if (count > 0) {
+      const ids = selectedIds.join(",");
+      navigate(`/对比?ids=${ids}`);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="radio-panel flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center flex-1">
           <div className="flex items-center gap-2">
             <label htmlFor="band-filter" className="text-sm text-muted-foreground whitespace-nowrap">
               频段筛选
@@ -227,6 +252,52 @@ export function StationTable({
         </div>
       </div>
 
+      {count > 0 && (
+        <div className="radio-panel flex flex-wrap items-center gap-3 p-3 bg-radio-amber/10 border-radio-amber/30">
+          <div className="flex items-center gap-2">
+            <GitCompare className="h-4 w-4 text-radio-amber" />
+            <span className="text-sm font-medium text-radio-amber">
+              已选择 {count}/3 个台站
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {selectedStations.map((station) => (
+              <Badge key={station.id} variant="secondary" className="gap-1">
+                {station.callSign}
+                <button
+                  onClick={(e) => {
+                  e.stopPropagation();
+                  removeFromCompare(station.id);
+                }}
+                  className="ml-1 hover:text-radio-amber transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clear}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              清空选择
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleCompare}
+              className="bg-radio-amber hover:bg-radio-amber/90 text-radio-wood"
+            >
+              <GitCompare className="h-4 w-4" />
+              对比台站
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="radio-panel overflow-hidden">
         <Table>
           <TableHeader>
@@ -270,6 +341,30 @@ export function StationTable({
           <span className="ml-2 hidden sm:inline">· {selectedBand.range}</span>
         )}
       </div>
+    </div>
+  );
+}
+
+/** 对比复选框组件 */
+function CompareCheckbox({ id, canAdd }: { id: string; canAdd: boolean }) {
+  const { isSelected, toggle } = useCompareItem(id);
+  const isDisabled = !isSelected && !canAdd;
+  return (
+    <div className="flex items-center justify-center">
+      <input
+        type="checkbox"
+        checked={isSelected}
+        disabled={isDisabled}
+        onChange={(e) => {
+          e.stopPropagation();
+          toggle();
+        }}
+        className={cn(
+          "h-4 w-4 rounded border-radio-brass/50 text-radio-amber focus:ring-radio-amber",
+          "bg-radio-wood/30 cursor-pointer",
+          isDisabled && "opacity-50 cursor-not-allowed"
+        )}
+      />
     </div>
   );
 }
