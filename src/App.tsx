@@ -1,12 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AppHeader } from "@/components/layout/AppHeader";
+import { BandOverviewPage } from "@/pages/BandOverviewPage";
 import { FavoritesPage } from "@/pages/FavoritesPage";
 import { StationDetailPage } from "@/pages/StationDetailPage";
 import { StationListPage } from "@/pages/StationListPage";
 
-/**
- * 应用根组件，配置 React Router 路由
- */
 export default function App() {
   return (
     <BrowserRouter>
@@ -15,6 +13,7 @@ export default function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<StationListPage />} />
+            <Route path="/频段概览" element={<BandOverviewPage />} />
             <Route path="/收藏" element={<FavoritesPage />} />
             <Route path="/station/:id" element={<StationDetailPage />} />
           </Routes>

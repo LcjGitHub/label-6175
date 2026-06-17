@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table";
 import Fuse from "fuse.js";
 import { ArrowDown, ArrowUp, ArrowUpDown, ExternalLink, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,15 +37,21 @@ import { BAND_OPTIONS } from "@/types/station";
 interface StationTableProps {
   data: Station[];
   emptyText?: string;
+  initialBandFilter?: FrequencyBand | "all";
 }
 
-/**
- * 台站列表 TanStack Table，支持频段筛选、模糊搜索与列排序
- */
-export function StationTable({ data, emptyText = "未找到匹配的台站，请调整筛选条件" }: StationTableProps) {
+export function StationTable({
+  data,
+  emptyText = "未找到匹配的台站，请调整筛选条件",
+  initialBandFilter = "all",
+}: StationTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [bandFilter, setBandFilter] = useState<FrequencyBand | "all">("all");
+  const [bandFilter, setBandFilter] = useState<FrequencyBand | "all">(initialBandFilter);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    setBandFilter(initialBandFilter);
+  }, [initialBandFilter]);
 
   const fuse = useMemo(
     () =>

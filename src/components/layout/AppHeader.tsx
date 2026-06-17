@@ -1,12 +1,9 @@
-import { Radio, Star } from "lucide-react";
+import { BarChart2, Radio, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useFavoritesCount } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 
-/**
- * 应用顶部导航栏，复古收音机风格
- */
 export function AppHeader() {
   const count = useFavoritesCount();
   return (
@@ -24,6 +21,20 @@ export function AppHeader() {
           </div>
         </Link>
         <div className="flex items-center gap-3">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className={cn(
+              "border-radio-brass/40 bg-radio-dial/30 transition-all",
+              "hover:bg-accent/20 hover:border-radio-brass/60"
+            )}
+          >
+            <Link to="/频段概览">
+              <BarChart2 className="h-4 w-4 text-radio-amber" />
+              <span className="text-xs text-radio-cream">频段概览</span>
+            </Link>
+          </Button>
           <Button
             asChild
             variant="outline"
