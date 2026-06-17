@@ -7,10 +7,16 @@ import { formatFrequency } from "@/types/station";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+/**
+ * 最近浏览折叠面板
+ * 展示用户最近访问过的台站列表（最多 10 条，按时间倒序），默认收起；
+ * 每条记录显示呼号、频率与波段，点击可快速跳转至对应台站详情页；
+ * 支持一键清空浏览历史。无历史记录时不渲染。
+ */
 export function RecentBrowsing() {
   const { history, count } = useHistory();
   const { clear } = useHistoryActions();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   if (count === 0) {
     return null;
