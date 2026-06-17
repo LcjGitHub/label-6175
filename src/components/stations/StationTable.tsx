@@ -42,7 +42,8 @@ interface StationTableProps {
 }
 
 /**
- * 台站列表 TanStack Table，支持频段筛选、模糊搜索与列排序
+ * 台站列表 TanStack Table，支持频段筛选、语言筛选、模糊搜索与列排序
+ * 语言选项由台站数据自动提取去重生成；筛选条件取交集，台站计数随结果实时更新
  */
 export function StationTable({
   data,
@@ -171,7 +172,7 @@ export function StationTable({
 
   return (
     <div className="space-y-4">
-      <div className="radio-panel flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="radio-panel flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
             <label htmlFor="band-filter" className="text-sm text-muted-foreground whitespace-nowrap">
@@ -224,12 +225,6 @@ export function StationTable({
             />
           </div>
         </div>
-        <div className="text-sm text-muted-foreground">
-          共 <span className="text-radio-amber font-semibold">{filteredData.length}</span> 个台站
-          {selectedBand && selectedBand.range && (
-            <span className="ml-2 hidden sm:inline">· {selectedBand.range}</span>
-          )}
-        </div>
       </div>
 
       <div className="radio-panel overflow-hidden">
@@ -267,6 +262,13 @@ export function StationTable({
             )}
           </TableBody>
         </Table>
+      </div>
+
+      <div className="text-sm text-muted-foreground px-1">
+        共 <span className="text-radio-amber font-semibold">{filteredData.length}</span> 个台站
+        {selectedBand && selectedBand.range && (
+          <span className="ml-2 hidden sm:inline">· {selectedBand.range}</span>
+        )}
       </div>
     </div>
   );

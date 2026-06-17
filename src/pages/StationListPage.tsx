@@ -31,7 +31,7 @@ export function StationListPage() {
             <CardTitle>短波台站参考表</CardTitle>
           </div>
           <CardDescription>
-            按频段筛选、排序或搜索呼号。点击台站查看 Mock 收听建议。本应用仅提供参考数据，不含真实电台音频流。
+            按频段或语言筛选、排序或搜索呼号。点击台站查看 Mock 收听建议。本应用仅提供参考数据，不含真实电台音频流。
           </CardDescription>
         </CardHeader>
         <CardContent>
