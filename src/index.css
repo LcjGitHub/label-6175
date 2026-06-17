@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 25% 8%;
+    --foreground: 38 60% 88%;
+    --card: 28 30% 12%;
+    --card-foreground: 38 60% 88%;
+    --primary: 38 80% 55%;
+    --primary-foreground: 28 30% 10%;
+    --secondary: 28 20% 18%;
+    --secondary-foreground: 38 50% 85%;
+    --muted: 28 15% 20%;
+    --muted-foreground: 35 20% 60%;
+    --accent: 38 70% 45%;
+    --accent-foreground: 38 60% 95%;
+    --border: 35 25% 25%;
+    --input: 28 20% 16%;
+    --ring: 38 80% 55%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono antialiased;
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(232, 168, 56, 0.08) 0%, transparent 60%),
+      linear-gradient(180deg, hsl(28 30% 6%) 0%, hsl(30 25% 8%) 100%);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .radio-panel {
+    @apply rounded-lg border border-radio-brass/30 bg-radio-wood/40 shadow-radio backdrop-blur-sm;
+  }
+
+  .radio-dial-glow {
+    text-shadow: 0 0 8px rgba(232, 168, 56, 0.6);
+  }
+
+  .frequency-display {
+    @apply font-mono tracking-widest text-radio-amber radio-dial-glow;
+  }
+}
