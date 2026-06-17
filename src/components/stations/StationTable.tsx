@@ -45,6 +45,7 @@ interface StationTableProps {
   data: Station[];
   emptyText?: string;
   initialBandFilter?: FrequencyBand | "all";
+  onReset?: () => void;
 }
 
 /**
@@ -55,6 +56,7 @@ export function StationTable({
   data,
   emptyText = "未找到匹配的台站，请调整筛选条件",
   initialBandFilter = "all",
+  onReset,
 }: StationTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [bandFilter, setBandFilter] = useState<FrequencyBand | "all">(initialBandFilter);
@@ -218,18 +220,17 @@ export function StationTable({
   const hasActiveFilters = useMemo(() => {
     return (
       bandFilter !== "all" ||
-      languageFilter !== "all" ||
       searchQuery.trim() !== "" ||
       sorting.length > 0
     );
-  }, [bandFilter, languageFilter, searchQuery, sorting]);
+  }, [bandFilter, searchQuery, sorting]);
 
   const handleResetFilters = () => {
     setBandFilter("all");
-    setLanguageFilter("all");
     setSearchQuery("");
     setSorting([]);
     setCurrentPage(1);
+    onReset?.();
   };
 
   const handleCompare = () => {
@@ -263,17 +264,6 @@ export function StationTable({
                 ))}
               </SelectContent>
             </Select>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleResetFilters}
-              disabled={!hasActiveFilters}
-              className="gap-1"
-              title="重置所有筛选和排序"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">重置筛选</span>
-            </Button>
           </div>
           <div className="flex items-center gap-2">
             <label htmlFor="language-filter" className="text-sm text-muted-foreground whitespace-nowrap">
@@ -305,6 +295,17 @@ export function StationTable({
             />
           </div>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleResetFilters}
+          disabled={!hasActiveFilters}
+          className="gap-1 self-start sm:self-center"
+          title="重置频段、搜索和排序"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+          <span>重置筛选</span>
+        </Button>
       </div>
 
       {count > 0 && (

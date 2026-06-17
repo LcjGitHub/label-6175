@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { stations } from "@/data/stations";
 import { StationTable } from "@/components/stations/StationTable";
@@ -12,7 +12,7 @@ import { Signal } from "lucide-react";
  * 台站列表首页
  */
 export function StationListPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const bandParam = searchParams.get("band");
 
   const initialBandFilter = useMemo(() => {
@@ -22,6 +22,14 @@ export function StationListPage() {
     }
     return "all" as const;
   }, [bandParam]);
+
+  const handleReset = useCallback(() => {
+    if (searchParams.has("band")) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete("band");
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4 py-8">
@@ -37,7 +45,11 @@ export function StationListPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <RecentBrowsing />
-          <StationTable data={stations} initialBandFilter={initialBandFilter} />
+          <StationTable
+            data={stations}
+            initialBandFilter={initialBandFilter}
+            onReset={handleReset}
+          />
         </CardContent>
       </Card>
     </div>
