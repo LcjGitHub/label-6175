@@ -102,9 +102,9 @@ export function StationTable({
     () => [
       {
         id: "select",
-        header: () => <span className="sr-only">选择</span>,
+        header: () => <span className="sr-only">选择对比</span>,
         cell: ({ row }) => (
-          <CompareCheckbox id={row.original.id} canAdd={canAdd} />
+          <CompareCheckbox id={row.original.id} callSign={row.original.callSign} canAdd={canAdd} />
         ),
         enableSorting: false,
         size: 40,
@@ -269,6 +269,7 @@ export function StationTable({
                   e.stopPropagation();
                   removeFromCompare(station.id);
                 }}
+                  aria-label={`从对比列表中移除 ${station.callSign}`}
                   className="ml-1 hover:text-radio-amber transition-colors"
                 >
                   <X className="h-3 w-3" />
@@ -346,7 +347,7 @@ export function StationTable({
 }
 
 /** 对比复选框组件 */
-function CompareCheckbox({ id, canAdd }: { id: string; canAdd: boolean }) {
+function CompareCheckbox({ id, callSign, canAdd }: { id: string; callSign: string; canAdd: boolean }) {
   const { isSelected, toggle } = useCompareItem(id);
   const isDisabled = !isSelected && !canAdd;
   return (
@@ -359,6 +360,7 @@ function CompareCheckbox({ id, canAdd }: { id: string; canAdd: boolean }) {
           e.stopPropagation();
           toggle();
         }}
+        aria-label={isSelected ? `从对比列表中移除 ${callSign}` : `添加 ${callSign} 到对比列表`}
         className={cn(
           "h-4 w-4 rounded border-radio-brass/50 text-radio-amber focus:ring-radio-amber",
           "bg-radio-wood/30 cursor-pointer",

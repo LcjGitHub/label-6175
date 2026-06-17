@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, Globe, Radio, Zap } from "lucide-react";
+import { Antenna, ArrowLeft, Clock, Globe, Radio, Zap } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getStationById } from "@/data/stations";
 import { Badge } from "@/components/ui/badge";
@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatFrequency } from "@/types/station";
 import type { Station } from "@/types/station";
-import { clearCompare } from "@/lib/compare";
-import { useEffect } from "react";
 
 /**
  * 台站对比页面，以并排卡片形式对比所选台站的信息
+ * 用户从对比页返回列表后保留已选台站勾选状态
  */
 export function StationComparePage() {
   const [searchParams] = useSearchParams();
@@ -20,12 +19,6 @@ export function StationComparePage() {
   const stations: Station[] = ids
     .map((id) => getStationById(id))
     .filter((s): s is Station => s !== undefined);
-
-  useEffect(() => {
-    return () => {
-      clearCompare();
-    };
-  }, []);
 
   if (stations.length === 0) {
     return (
@@ -44,8 +37,9 @@ export function StationComparePage() {
   }
 
   const compareFields = [
+    { key: "callSign", label: "呼号", icon: Antenna },
     { key: "frequency", label: "频率", icon: Radio },
-    { key: "band", label: "频段", icon: Radio },
+    { key: "band", label: "频段", icon: Antenna },
     { key: "language", label: "语言", icon: Globe },
     { key: "timeSlot", label: "时段", icon: Clock },
     { key: "power", label: "功率", icon: Zap },
@@ -96,11 +90,8 @@ export function StationComparePage() {
                   <Radio className="h-6 w-6 text-radio-amber" />
                 </div>
                 <h2 className="font-display text-xl font-bold text-radio-cream">{station.callSign}</h2>
-                <p className="mt-1 frequency-display text-lg text-radio-amber">
-                  {formatFrequency(station.frequency)}
-                </p>
                 <div className="mt-3 flex flex-wrap justify-center gap-2">
-                  <Badge variant="band">{station.band} 波段</Badge>
+                  <Badge variant="band">{station.band} 米波</Badge>
                   <Badge variant="outline">{station.language}</Badge>
                 </div>
               </div>
