@@ -43,6 +43,7 @@ vendor/
 target/
 
 # Package / build output
+# Vite build output directory
 dist/
 out/
 build/
