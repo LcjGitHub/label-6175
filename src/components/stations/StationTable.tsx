@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { FavoriteButton } from "@/components/ui/favorite-button";
 import { HighlightText } from "@/components/ui/highlight-text";
 import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -39,6 +40,8 @@ import { removeFromCompare } from "@/lib/compare";
 import { cn } from "@/lib/utils";
 import { stationMatchesSearch } from "@/lib/highlight";
 
+const PAGE_SIZE = 10;
+
 interface StationTableProps {
   data: Station[];
   emptyText?: string;
@@ -58,12 +61,18 @@ export function StationTable({
   const [bandFilter, setBandFilter] = useState<FrequencyBand | "all">(initialBandFilter);
   const [languageFilter, setLanguageFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const { selectedIds, count, canAdd, clear } = useCompare();
   const navigate = useNavigate();
 
   useEffect(() => {
     setBandFilter(initialBandFilter);
+    setCurrentPage(1);
   }, [initialBandFilter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [bandFilter, languageFilter, searchQuery]);
 
   const languageOptions = useMemo(() => extractLanguageOptions(data), [data]);
 
@@ -84,6 +93,13 @@ export function StationTable({
 
     return result;
   }, [data, bandFilter, languageFilter, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / PAGE_SIZE));
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredData.slice(start, start + PAGE_SIZE);
+  }, [filteredData, currentPage]);
 
   const selectedStations = useMemo(() => {
     return data.filter((s) => selectedIds.includes(s.id));
@@ -173,7 +189,7 @@ export function StationTable({
   );
 
   const table = useReactTable({
-    data: filteredData,
+    data: paginatedData,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
@@ -295,6 +311,18 @@ export function StationTable({
         </div>
       )}
 
+      <div className="flex items-center justify-between px-1">
+        <div className="text-sm text-muted-foreground">
+          共 <span className="text-radio-amber font-semibold">{filteredData.length}</span> 个台站
+          {selectedBand && selectedBand.range && (
+            <span className="ml-2 hidden sm:inline">· {selectedBand.range}</span>
+          )}
+        </div>
+        <div className="text-sm text-muted-foreground">
+          第 <span className="text-radio-amber font-semibold">{currentPage}</span> / {totalPages} 页
+        </div>
+      </div>
+
       <div className="radio-panel overflow-hidden">
         <Table>
           <TableHeader>
@@ -332,12 +360,14 @@ export function StationTable({
         </Table>
       </div>
 
-      <div className="text-sm text-muted-foreground px-1">
-        共 <span className="text-radio-amber font-semibold">{filteredData.length}</span> 个台站
-        {selectedBand && selectedBand.range && (
-          <span className="ml-2 hidden sm:inline">· {selectedBand.range}</span>
-        )}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={filteredData.length}
+        pageSize={PAGE_SIZE}
+        onPageChange={setCurrentPage}
+        className="px-1"
+      />
     </div>
   );
 }
