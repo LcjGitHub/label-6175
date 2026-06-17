@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { stations } from "@/data/stations";
 import { StationTable } from "@/components/stations/StationTable";
+import { RecentBrowsing } from "@/components/stations/RecentBrowsing";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BAND_OPTIONS } from "@/types/station";
 import type { FrequencyBand } from "@/types/station";
@@ -23,7 +24,8 @@ export function StationListPage() {
   }, [bandParam]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-8">
+    <div className="mx-auto max-w-6xl space-y-4 px-4 py-8">
+      <RecentBrowsing />
       <Card className="radio-panel border-radio-brass/30 bg-radio-wood/30">
         <CardHeader>
           <div className="flex items-center gap-2">

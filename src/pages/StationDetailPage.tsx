@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import { useEffect, type ComponentType } from "react";
 import { ArrowLeft, Antenna, Clock, Globe, Radio, Zap } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getStationById } from "@/data/stations";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { FavoriteButton } from "@/components/ui/favorite-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatFrequency } from "@/types/station";
+import { addHistory } from "@/lib/history";
 
 /**
  * 台站详情页，展示 Mock 收听建议
@@ -14,6 +15,12 @@ import { formatFrequency } from "@/types/station";
 export function StationDetailPage() {
   const { id } = useParams<{ id: string }>();
   const station = id ? getStationById(id) : undefined;
+
+  useEffect(() => {
+    if (station) {
+      addHistory(station.id);
+    }
+  }, [station]);
 
   if (!station) {
     return (
