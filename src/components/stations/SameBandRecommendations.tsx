@@ -2,24 +2,35 @@ import { Radio } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getSameBandStations } from "@/data/stations";
 import { formatFrequency } from "@/types/station";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+/**
+ * 同频段推荐组件属性
+ */
 interface SameBandRecommendationsProps {
+  /** 当前台站 ID，用于排除自身并查找同频段其他台站 */
   stationId: string;
+  /** 最多推荐条数，默认 5 条 */
   limit?: number;
 }
 
+/**
+ * 同频段推荐区块
+ * 展示与当前台站属于同一频段的其他台站（最多 5 条，按频率从低到高排序）；
+ * 每条记录显示呼号、频率与语言，点击可快速跳转至对应台站详情页；
+ * 无同频段推荐台站时显示「暂无推荐」提示。
+ */
 export function SameBandRecommendations({ stationId, limit = 5 }: SameBandRecommendationsProps) {
   const recommendations = getSameBandStations(stationId, limit);
 
   return (
     <Card className="radio-panel border-radio-brass/30">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <h2 className="flex items-center gap-2 font-display text-xl font-semibold leading-none tracking-tight text-radio-cream">
           <Radio className="h-4 w-4 text-radio-amber" />
           同频段推荐
-        </CardTitle>
+        </h2>
         <CardDescription>同一波段的其他台站，方便您切换收听</CardDescription>
       </CardHeader>
       <CardContent>
@@ -53,7 +64,7 @@ export function SameBandRecommendations({ stationId, limit = 5 }: SameBandRecomm
         ) : (
           <div className="rounded-md border border-dashed border-radio-brass/30 bg-radio-dial/10 py-8 text-center">
             <Radio className="mx-auto h-8 w-8 text-muted-foreground/50" />
-            <p className="mt-2 text-sm text-muted-foreground">暂无同频段推荐台站</p>
+            <p className="mt-2 text-sm text-muted-foreground">暂无推荐</p>
           </div>
         )}
       </CardContent>

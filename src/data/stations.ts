@@ -15,7 +15,9 @@ export function getStationById(id: string): Station | undefined {
  * 根据频段查找台站，排除指定 ID
  */
 export function getStationsByBand(band: FrequencyBand, excludeId?: string): Station[] {
-  return stations.filter((s) => s.band === band && s.id !== excludeId);
+  return stations
+    .filter((s) => s.band === band && s.id !== excludeId)
+    .sort((a, b) => a.frequency - b.frequency);
 }
 
 /**
