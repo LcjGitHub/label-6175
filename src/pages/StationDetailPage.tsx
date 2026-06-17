@@ -81,25 +81,23 @@ export function StationDetailPage() {
 
       <Card className="radio-panel border-radio-brass/30">
         <CardHeader>
-          <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <span className="inline-block h-2 w-2 rounded-full bg-radio-amber animate-pulse" />
-                收听建议
-              </CardTitle>
-              <CardDescription>基于 Mock 数据的参考性收听提示（非实时传播预报）</CardDescription>
-            </div>
-            <CopyButton
-              text={`呼号：${station.callSign}\n频率：${formatFrequency(station.frequency)}\n收听建议：\n${station.listeningAdvice}`}
-              size="sm"
-            />
-          </div>
+          <CardTitle className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-radio-amber animate-pulse" />
+            收听建议
+          </CardTitle>
+          <CardDescription>基于 Mock 数据的参考性收听提示（非实时传播预报）</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border border-radio-brass/20 bg-radio-dial/30 p-5">
-            <p className="leading-relaxed text-radio-cream/90 whitespace-pre-wrap">
-              {station.listeningAdvice}
-            </p>
+            <div className="flex items-start justify-start gap-3">
+              <p className="flex-1 leading-relaxed text-radio-cream/90 whitespace-pre-wrap">
+                {station.listeningAdvice}
+              </p>
+              <CopyButton
+                text={`呼号：${station.callSign}\n频率：${formatFrequency(station.frequency)}\n收听建议：\n${station.listeningAdvice}`}
+                className="shrink-0"
+              />
+            </div>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             提示：实际接收效果受太阳活动、季节、天线与本地干扰等因素影响。本页面不提供音频流或在线收听功能。
