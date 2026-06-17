@@ -1,5 +1,6 @@
 import * as React from "react";
-import { cn, getHighlightSegments } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { getHighlightSegments } from "@/lib/highlight";
 
 export interface HighlightTextProps extends React.HTMLAttributes<HTMLSpanElement> {
   text: string;

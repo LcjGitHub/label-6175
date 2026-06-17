@@ -7,7 +7,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Fuse from "fuse.js";
 import { ArrowDown, ArrowUp, ArrowUpDown, ExternalLink, GitCompare, Search, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -38,6 +37,7 @@ import { extractLanguageOptions } from "@/lib/band-stats";
 import { useCompare, useCompareItem } from "@/hooks/useCompare";
 import { removeFromCompare } from "@/lib/compare";
 import { cn } from "@/lib/utils";
+import { stationMatchesSearch } from "@/lib/highlight";
 
 interface StationTableProps {
   data: Station[];
@@ -67,15 +67,6 @@ export function StationTable({
 
   const languageOptions = useMemo(() => extractLanguageOptions(data), [data]);
 
-  const fuse = useMemo(
-    () =>
-      new Fuse(data, {
-        keys: ["callSign", "language", "timeSlot", "band"],
-        threshold: 0.4,
-      }),
-    [data]
-  );
-
   const filteredData = useMemo(() => {
     let result = data;
 
@@ -88,12 +79,11 @@ export function StationTable({
     }
 
     if (searchQuery.trim()) {
-      const ids = new Set(fuse.search(searchQuery.trim()).map((r) => r.item.id));
-      result = result.filter((s) => ids.has(s.id));
+      result = result.filter((s) => stationMatchesSearch(s, searchQuery));
     }
 
     return result;
-  }, [data, bandFilter, languageFilter, searchQuery, fuse]);
+  }, [data, bandFilter, languageFilter, searchQuery]);
 
   const selectedStations = useMemo(() => {
     return data.filter((s) => selectedIds.includes(s.id));
