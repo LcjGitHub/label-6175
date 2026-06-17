@@ -85,3 +85,16 @@ export function getUniqueLanguageCount(stationList: Station[] = stations): numbe
   const langs = new Set(stationList.map((s) => s.language));
   return langs.size;
 }
+
+export interface LanguageOption {
+  value: string;
+  label: string;
+}
+
+export function extractLanguageOptions(stationList: Station[] = stations): LanguageOption[] {
+  const langs = Array.from(new Set(stationList.map((s) => s.language))).sort();
+  return [
+    { value: "all", label: "全部语言" },
+    ...langs.map((l) => ({ value: l, label: l })),
+  ];
+}

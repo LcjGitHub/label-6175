@@ -33,6 +33,7 @@ import {
 import { formatFrequency } from "@/types/station";
 import type { FrequencyBand, Station } from "@/types/station";
 import { BAND_OPTIONS } from "@/types/station";
+import { extractLanguageOptions } from "@/lib/band-stats";
 
 interface StationTableProps {
   data: Station[];
@@ -50,11 +51,14 @@ export function StationTable({
 }: StationTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [bandFilter, setBandFilter] = useState<FrequencyBand | "all">(initialBandFilter);
+  const [languageFilter, setLanguageFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     setBandFilter(initialBandFilter);
   }, [initialBandFilter]);
+
+  const languageOptions = useMemo(() => extractLanguageOptions(data), [data]);
 
   const fuse = useMemo(
     () =>
@@ -72,13 +76,17 @@ export function StationTable({
       result = result.filter((s) => s.band === bandFilter);
     }
 
+    if (languageFilter !== "all") {
+      result = result.filter((s) => s.language === languageFilter);
+    }
+
     if (searchQuery.trim()) {
       const ids = new Set(fuse.search(searchQuery.trim()).map((r) => r.item.id));
       result = result.filter((s) => ids.has(s.id));
     }
 
     return result;
-  }, [data, bandFilter, searchQuery, fuse]);
+  }, [data, bandFilter, languageFilter, searchQuery, fuse]);
 
   const columns = useMemo<ColumnDef<Station>[]>(
     () => [
@@ -181,6 +189,26 @@ export function StationTable({
                   <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}
                     {opt.range && ` (${opt.range})`}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="language-filter" className="text-sm text-muted-foreground whitespace-nowrap">
+              语言筛选
+            </label>
+            <Select
+              value={languageFilter}
+              onValueChange={(v) => setLanguageFilter(v)}
+            >
+              <SelectTrigger id="language-filter" className="w-[150px]">
+                <SelectValue placeholder="选择语言" />
+              </SelectTrigger>
+              <SelectContent>
+                {languageOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
                   </SelectItem>
                 ))}
               </SelectContent>
