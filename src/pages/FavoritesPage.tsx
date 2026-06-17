@@ -6,6 +6,7 @@ import { StationTable } from "@/components/stations/StationTable";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorites";
+import { cn } from "@/lib/utils";
 
 /**
  * 收藏台站列表页
@@ -32,7 +33,14 @@ export function FavoritesPage() {
       <Card className="radio-panel border-radio-brass/30 bg-radio-wood/30">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Star className="h-5 w-5 text-radio-amber fill-current drop-shadow-[0_0_4px_rgba(255,179,71,0.5)]" />
+            <Star
+              className={cn(
+                "h-5 w-5 text-radio-amber",
+                favoriteStations.length > 0
+                  ? "fill-current drop-shadow-[0_0_4px_rgba(255,179,71,0.5)]"
+                  : ""
+              )}
+            />
             <CardTitle>我的收藏台站</CardTitle>
           </div>
           <CardDescription>
@@ -41,7 +49,7 @@ export function FavoritesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <StationTable data={favoriteStations} />
+          <StationTable data={favoriteStations} emptyText="尚未收藏任何台站" />
         </CardContent>
       </Card>
     </div>

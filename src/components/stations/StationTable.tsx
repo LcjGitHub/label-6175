@@ -36,12 +36,13 @@ import { BAND_OPTIONS } from "@/types/station";
 
 interface StationTableProps {
   data: Station[];
+  emptyText?: string;
 }
 
 /**
  * 台站列表 TanStack Table，支持频段筛选、模糊搜索与列排序
  */
-export function StationTable({ data }: StationTableProps) {
+export function StationTable({ data, emptyText = "未找到匹配的台站，请调整筛选条件" }: StationTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [bandFilter, setBandFilter] = useState<FrequencyBand | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -223,7 +224,7 @@ export function StationTable({ data }: StationTableProps) {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
-                  未找到匹配的台站，请调整筛选条件
+                  {emptyText}
                 </TableCell>
               </TableRow>
             )}

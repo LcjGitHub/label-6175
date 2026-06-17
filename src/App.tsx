@@ -15,7 +15,7 @@ export default function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<StationListPage />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/收藏" element={<FavoritesPage />} />
             <Route path="/station/:id" element={<StationDetailPage />} />
           </Routes>
         </main>

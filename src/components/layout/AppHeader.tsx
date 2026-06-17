@@ -33,8 +33,13 @@ export function AppHeader() {
               "hover:bg-accent/20 hover:border-radio-brass/60"
             )}
           >
-            <Link to="/favorites">
-              <Star className="h-4 w-4 text-radio-amber fill-current" />
+            <Link to="/收藏">
+              <Star
+                className={cn(
+                  "h-4 w-4 text-radio-amber transition-all",
+                  count > 0 ? "fill-current drop-shadow-[0_0_4px_rgba(255,179,71,0.5)]" : ""
+                )}
+              />
               <span className="text-xs text-radio-cream">收藏</span>
               <span className="ml-1 inline-flex min-w-[20px] items-center justify-center rounded-full bg-radio-amber/20 px-1.5 py-0.5 text-xs font-semibold text-radio-amber">
                 {count}
